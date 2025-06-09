@@ -51,3 +51,7 @@ class InfoRequest(models.Model):
         Cruise,
         on_delete=models.PROTECT
     )
+    def __str__(self):
+        return f'Solicitud de {self.name} sobre {self.cruise}'
+
+

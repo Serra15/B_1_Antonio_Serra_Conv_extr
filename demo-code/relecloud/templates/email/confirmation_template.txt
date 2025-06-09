@@ -1,0 +1,10 @@
+Hola {{ name }},
+
+Hemos recibido correctamente tu solicitud de información en Relecloud Space Travel.
+
+Uno de nuestros agentes se pondrá en contacto contigo pronto con más detalles sobre tu consulta.
+
+Gracias por tu interés en explorar la galaxia con nosotros.
+
+Atentamente,
+El equipo de Relecloud

@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '_*&5c@1153xw6=489*2*=&*%=4)8f^m54kb@3ca-cb(wm%b@wm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['antonioviajesespaciales-hkhzapdweggahfax.spaincentral-01.azurewebsites.net']
+ALLOWED_HOSTS = ['antonioviajesespaciales-hkhzapdweggahfax.spaincentral-01.azurewebsites.net', '127.0.0.1']
 
 
 # Application definition
@@ -132,3 +132,6 @@ STATIC_URL = '/relecloud/static/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
