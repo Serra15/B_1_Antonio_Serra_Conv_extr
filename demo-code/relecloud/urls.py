@@ -10,4 +10,6 @@ urlpatterns = [
     path('cruise/<int:pk>', views.CruiseDetailView.as_view(), name='cruise_detail'),
     path('info_request', views.InfoRequestCreate.as_view(), name='info_request'),
     path('cruise/<int:cruise_id>/add_review/', views.add_review, name='add_review'),
+    path('destinations/', views.destinations, name='destinations'),
+    path('destinations/all/', views.all_destinations_list, name='destinations_all'),
 ]

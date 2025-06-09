@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="text-center">
+        <h1 class="display-4">Todos Nuestros Destinos</h1>
+        <p class="lead">Elige tu próxima aventura intergaláctica.</p>
+    </div>
+
+    <div class="list-group my-4">
+        {% for destination in destinations %}
+            <a href="{{ destination.get_absolute_url }}" class="list-group-item list-group-item-action">
+                {{ destination.name }}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

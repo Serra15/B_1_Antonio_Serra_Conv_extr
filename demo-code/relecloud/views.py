@@ -10,10 +10,11 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-# 👇 AÑADE ESTAS NUEVAS IMPORTACIONES PARA LA VISTA DE OPINIONES 👇
+# Imports para las vistas de opiniones y popularidad
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import ReviewForm # Asumimos que has creado ReviewForm en forms.py
+from .forms import ReviewForm
+from django.db.models import Avg
 
 
 # Create your views here.
@@ -23,9 +24,34 @@ def index(request):
 def about(request):
     return render(request, 'about.html')
 
+
 def destinations(request):
-    all_destinations = models.Destination.objects.all()
-    return render(request, 'destinations.html', { 'destinations': all_destinations})
+    """
+    Esta vista ahora muestra los 3 destinos más populares basados en la 
+    valoración media de las opiniones de sus cruceros.
+    """
+    # 👇 CAMBIO REALIZADO AQUÍ: Se ha renombrado 'average_rating' a 'avg_rating' para evitar conflictos 👇
+    popular_destinations = models.Destination.objects.annotate(
+        avg_rating=Avg('cruises__reviews__rating')
+    ).filter(
+        avg_rating__isnull=False
+    ).order_by(
+        '-avg_rating'
+    )[:3]
+
+    context = {
+        'popular_destinations': popular_destinations
+    }
+    return render(request, 'destinations.html', context)
+
+
+def all_destinations_list(request):
+    """
+    Esta vista muestra una lista de todos los destinos, ordenados alfabéticamente.
+    """
+    all_destinations = models.Destination.objects.order_by('name')
+    return render(request, 'all_destinations.html', {'destinations': all_destinations})
+
 
 class DestinationDetailView(generic.DetailView):
     template_name = 'destination_detail.html'
@@ -38,6 +64,7 @@ class CruiseDetailView(generic.DetailView):
     context_object_name = 'cruise'
 
 class InfoRequestCreate(SuccessMessageMixin, generic.CreateView):
+    # ... (Tu vista InfoRequestCreate se mantiene igual) ...
     template_name = 'info_request_create.html'
     model = models.InfoRequest
     fields = ['name', 'email', 'cruise', 'notes']
@@ -59,32 +86,18 @@ class InfoRequestCreate(SuccessMessageMixin, generic.CreateView):
             print(f"Error al enviar el correo: {e}")
         return super().form_valid(form)
 
-
-# 👇 AÑADE ESTA NUEVA VISTA AL FINAL DE TU ARCHIVO 👇
 @login_required
 def add_review(request, cruise_id):
-    # Usamos get_object_or_404 para obtener el crucero. Si no existe, dará un error 404.
+    # ... (Tu vista add_review se mantiene igual) ...
     cruise = get_object_or_404(models.Cruise, id=cruise_id)
-    
     if request.method == 'POST':
-        # Si el formulario se envía, procesamos los datos
         form = ReviewForm(request.POST)
         if form.is_valid():
-            # Creamos el objeto Review pero sin guardarlo aún en la base de datos
             review = form.save(commit=False)
-            
-            # Asignamos el crucero y el usuario (que está en request.user) a la opinión
             review.cruise = cruise
             review.user = request.user
-            
-            # Ahora guardamos la opinión completa en la base de datos
             review.save()
-            
-            # Redirigimos al usuario de vuelta a la página de detalle del crucero
             return redirect('cruise_detail', pk=cruise.id)
     else:
-        # Si es una petición GET, simplemente mostramos un formulario vacío
         form = ReviewForm()
-        
-    # Renderizamos la plantilla para el formulario
     return render(request, 'add_review.html', {'form': form, 'cruise': cruise})

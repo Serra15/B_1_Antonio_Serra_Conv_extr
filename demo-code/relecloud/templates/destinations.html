@@ -1,19 +1,36 @@
 {% extends 'base.html' %}
-
-{% block title %}
-ReleCloud - Destinations
-{% endblock %}
-
 {% block content %}
-<h1>Cruise destinations</h1>
-<p>
-If you can imagine it, we travel to it! Below is our list of confirmed destinations.
-</p>
-<ul class="list-group">
-    {% for destination in destinations %}
-    <a class="list-group-item list-group-item-action" href="{% url 'destination_detail' destination.id %}">
-        {{ destination }}
-    </a>
-    {% endfor %}
-</ul>
-{% endblock content %}
+
+<div class="container py-5">
+    <div class="text-center">
+        <h1 class="display-4">Nuestros Destinos Más Populares</h1>
+        <p class="lead">Explora los lugares mejor valorados por nuestros viajeros espaciales.</p>
+    </div>
+
+    <div class="row my-4">
+        {% for destination in popular_destinations %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if destination.image %}
+                <img src="{{ destination.image.url }}" class="card-img-top" alt="{{ destination.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ destination.name }}</h5>
+                    {% if destination.avg_rating %}
+                        <h6 class="card-subtitle mb-2 text-muted">Valoración: {{ destination.avg_rating|floatformat:1 }} ⭐</h6>
+                    {% endif %}
+                    <p class="card-text">{{ destination.description|truncatewords:20 }}</p>
+                    <a href="{{ destination.get_absolute_url }}" class="btn btn-primary">Ver Detalles</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'destinations_all' %}" class="btn btn-secondary btn-lg">Ver Todos los Destinos</a>
+    </div>
+
+</div>
+
+{% endblock %}
