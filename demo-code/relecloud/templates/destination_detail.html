@@ -31,4 +31,13 @@ ReleCloud - {{ destination.name }}
         </div>
     </div>
 </div>
+
+<div class="my-3">
+    {% if destination.average_rating %}
+        <h4>Valoración Media del Destino: {{ destination.average_rating|floatformat:1 }} ⭐</h4>
+    {% else %}
+        <p>Este destino aún no tiene valoraciones.</p>
+    {% endif %}
+</div>
+
 {% endblock content %}

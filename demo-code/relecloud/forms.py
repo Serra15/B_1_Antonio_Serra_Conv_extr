@@ -1,5 +1,5 @@
 from django import forms
-from .models import InfoRequest # Esta línea asume que tienes un modelo llamado InfoRequest
+from .models import InfoRequest, Review # Esta línea asume que tienes un modelo llamado InfoRequest
 
 class InfoRequestForm(forms.ModelForm):
     """
@@ -11,3 +11,13 @@ class InfoRequestForm(forms.ModelForm):
         # Lista los campos de tu modelo que quieres que aparezcan en el formulario.
         # Asegúrate de que estos nombres coincidan con los de tu models.py
         fields = ['name', 'email', 'notes', 'cruise']
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        # Solo mostramos estos dos campos al usuario.
+        # El usuario y el crucero se asignarán automáticamente en la vista.
+        fields = ['rating', 'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'rows': 4}),
+        }
