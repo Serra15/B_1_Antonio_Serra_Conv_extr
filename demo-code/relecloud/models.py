@@ -1,6 +1,6 @@
 from django.db import models
+from django.urls import reverse
 
-# Create your models here.
 class Destination(models.Model):
     name = models.CharField(
         unique=True,
@@ -13,8 +13,20 @@ class Destination(models.Model):
         null=False,
         blank=False
     )
+    image = models.ImageField(
+        upload_to='destination_images/', 
+        blank=True, 
+        null=True, 
+        help_text="Imagen representativa del destino."
+    )
+
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        # Devuelve la URL para la página de detalle de este destino.
+        # 'destination_detail' debe ser el name= que le diste a la URL en urls.py
+        return reverse('destination_detail', args=[str(self.id)])
 
 class Cruise(models.Model):
     name = models.CharField(
@@ -35,6 +47,12 @@ class Cruise(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        # Devuelve la URL para la página de detalle de este crucero.
+        # 'cruise_detail' debe ser el name= que le diste a la URL en urls.py
+        return reverse('cruise_detail', args=[str(self.id)])
+
+
 class InfoRequest(models.Model):
     name = models.CharField(
         max_length=50,
@@ -53,5 +71,3 @@ class InfoRequest(models.Model):
     )
     def __str__(self):
         return f'Solicitud de {self.name} sobre {self.cruise}'
-
-

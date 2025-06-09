@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,3 +136,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# URL base para servir archivos media subidos por el usuario
+MEDIA_URL = '/media/'
+
+# Ruta en el sistema de archivos donde se guardarán los archivos media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

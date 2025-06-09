@@ -1,18 +1,34 @@
 {% extends 'base.html' %}
-
-{% block title %}
-ReleCloud - {{ destination }}
+{% load static %} {% block title %}
+ReleCloud - {{ destination.name }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ destination }}</h1>
-<p>
-{{ destination.description }}
-</p>
-<p>You can explore {{ destination }} on the following cruises:</p>
-<ul class="list-group">
-    {% for cruise in destination.cruises.all %}
-    <a class="list-group-item list-group-item-action" href="{% url 'cruise_detail' cruise.id %}">{{ cruise }}</a>
-    {% endfor %}
-</ul>
+<div class="container py-5">
+    <h1 class="display-4">{{ destination.name }}</h1>
+
+    {% if destination.image %}
+        <img src="{{ destination.image.url }}" alt="Imagen de {{ destination.name }}" class="img-fluid rounded my-4 shadow">
+    {% else %}
+        <p class="text-muted my-4">(No hay imagen disponible para este destino)</p>
+    {% endif %}
+
+    <div class="description my-4">
+        <p class="lead">
+            {{ destination.description|linebreaks }}
+        </p>
+    </div>
+    
+    <div class="cruises my-4">
+        <h3>Puedes explorar {{ destination.name }} en los siguientes cruceros:</h3>
+        <div class="list-group">
+            {% for cruise in destination.cruises.all %}
+                <a class="list-group-item list-group-item-action" href="{% url 'cruise_detail' cruise.pk %}">{{ cruise.name }}</a>
+            
+            {% empty %}
+                <p class="list-group-item">Actualmente no hay cruceros programados para este destino. ¡Vuelve a consultarnos pronto!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock content %}

@@ -4,3 +4,4 @@ crispy_bootstrap4
 whitenoise
 psycopg2
 psycopg2-binary
+pillow
